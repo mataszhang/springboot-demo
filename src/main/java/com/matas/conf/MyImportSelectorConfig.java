@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
  * @email mataszhang@163.com
  */
 @Configuration
-@ConditionalOnProperty(name = "enabled.myconfig", havingValue = "true", matchIfMissing = false)  //基于条件的自动配置
+@ConditionalOnProperty(name = "enabled.myconfig", havingValue = "true")  //基于条件的自动配置
 public class MyImportSelectorConfig {
     @Bean
     User user() {
