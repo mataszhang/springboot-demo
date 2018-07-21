@@ -9,8 +9,8 @@ import org.springframework.core.io.support.SpringFactoriesLoader;
 
 import java.util.List;
 
-@SpringBootApplication
 @Import(MyImportSelector.class)
+@SpringBootApplication
 public class SpringbootDemoApplication {
 
     /**
@@ -31,6 +31,8 @@ public class SpringbootDemoApplication {
 
     public static void main(String[] args) {
         testLoadConfig();
-        SpringApplication.run(SpringbootDemoApplication.class, args);
+        //SpringApplication.run(SpringbootDemoApplication.class, args);
+        SpringApplication sa = new SpringApplication(SpringbootDemoApplication.class);
+        sa.run(args);
     }
 }
