@@ -1,6 +1,5 @@
 package com.matas.springbootdemo;
 
-import com.matas.springbootdemo.bean.User;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
