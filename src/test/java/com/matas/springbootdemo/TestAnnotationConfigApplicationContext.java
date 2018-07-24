@@ -1,7 +1,12 @@
 package com.matas.springbootdemo;
 
+import com.matas.springbootdemo.bean.User;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.boot.context.properties.*;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConfigurationPropertiesBindingPostProcessor;
+import org.springframework.boot.context.properties.ConfigurationPropertiesBindingPostProcessorRegistrar;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.*;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotationMetadata;
@@ -13,6 +18,8 @@ import org.springframework.core.type.AnnotationMetadata;
  * @date 2018/7/24 13:47
  * @email mataszhang@163.com
  */
+
+@EnableAutoConfiguration
 public class TestAnnotationConfigApplicationContext {
 
     @Configuration
@@ -54,7 +61,10 @@ public class TestAnnotationConfigApplicationContext {
     public static void main(String[] args) {
         AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(AppConfig.class);
         ConfigHolder configHolder = ctx.getBean(ConfigHolder.class);
-        System.out.println(configHolder);
-    }
+        //使用springboot的@EnableAutoConfiguration
+        AnnotationConfigApplicationContext springBootCtx = new AnnotationConfigApplicationContext(TestAnnotationConfigApplicationContext.class);
 
+        System.out.println(configHolder);
+        System.out.println(springBootCtx.getBeanDefinitionCount());
+    }
 }
