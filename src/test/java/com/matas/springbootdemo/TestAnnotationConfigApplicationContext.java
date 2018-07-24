@@ -62,6 +62,9 @@ public class TestAnnotationConfigApplicationContext {
         AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(AppConfig.class);
         ConfigHolder configHolder = ctx.getBean(ConfigHolder.class);
         //使用springboot的@EnableAutoConfiguration
+
+        //ctx.scan("com.matas");//org.springframework.context.annotation.ClassPathBeanDefinitionScanner.doScan()
+
         AnnotationConfigApplicationContext springBootCtx = new AnnotationConfigApplicationContext(TestAnnotationConfigApplicationContext.class);
 
         System.out.println(configHolder);
