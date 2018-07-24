@@ -7,7 +7,7 @@ import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotationMetadata;
 
 /**
- *
+ * EnableConfigurationProperties ，ConfigurationProperties 实现流程
  *
  * @author matas
  * @date 2018/7/24 13:47
@@ -39,6 +39,10 @@ public class TestAnnotationConfigApplicationContext {
     }
 
     /**
+     * @param args
+     * @return
+     * @author matas
+     * @date 2018/7/24 14:28
      * @see AnnotationConfigUtils#registerAnnotationConfigProcessors(BeanDefinitionRegistry, java.lang.Object) 注册ConfigurationClassPostProcessor ，解析@Configuration
      * @see ConfigurationClassParser#processPropertySource(AnnotationAttributes) 解析@PropertySource , 放到AbstractApplicationContext->ConfigurableEnvironment(environment)->propertySources中
      * @see EnableConfigurationPropertiesImportSelector#selectImports(AnnotationMetadata) 解析@Configuration 会processImports， 调用该方法
@@ -46,10 +50,6 @@ public class TestAnnotationConfigApplicationContext {
      * @see ConfigurationPropertiesBeanRegistrar  如果 @EnableConfigurationProperties的values有值，则将values对应的class注册到BeanFactory ,{@link org.springframework.boot.context.properties.EnableConfigurationPropertiesImportSelector.ConfigurationPropertiesBeanRegistrar#registerBeanDefinition(BeanDefinitionRegistry, java.lang.Class, java.lang.String)}
      * @see ConfigurationPropertiesBindingPostProcessorRegistrar 注册ConfigurationBeanFactoryMetaData ， ConfigurationPropertiesBindingPostProcessor
      * @see ConfigurationPropertiesBindingPostProcessor#postProcessBeforeInitialization(java.lang.Object, java.lang.String) 处理 @ConfigurationProperties
-     * @param args
-     * @return
-     * @author matas
-     * @date 2018/7/24 14:28
      */
     public static void main(String[] args) {
         AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(AppConfig.class);
