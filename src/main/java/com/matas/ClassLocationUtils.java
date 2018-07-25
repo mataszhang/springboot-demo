@@ -1,7 +1,5 @@
 package com.matas;
 
-import org.springframework.beans.factory.support.DefaultListableBeanFactory;
-import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.File;
