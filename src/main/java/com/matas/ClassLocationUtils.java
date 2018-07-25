@@ -1,5 +1,7 @@
 package com.matas;
 
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.File;
@@ -48,7 +50,7 @@ public class ClassLocationUtils {
         return result.toString();
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         ClassLocationUtils.where(ClassPathXmlApplicationContext.class);
     }
 }
