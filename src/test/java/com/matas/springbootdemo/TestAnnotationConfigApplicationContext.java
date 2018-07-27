@@ -11,6 +11,8 @@ import org.springframework.context.annotation.*;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotationMetadata;
 
+import java.util.Arrays;
+
 /**
  * EnableConfigurationProperties ，ConfigurationProperties 实现流程
  *
@@ -25,9 +27,22 @@ public class TestAnnotationConfigApplicationContext {
     @Configuration
     @EnableConfigurationProperties(ConfigHolder.class)
     @PropertySource("config.properties")
+    @Import(OtherConfig.class)
     public static class AppConfig {
-
+        @Bean("user1")
+        public User user() {
+            return new User("jack", 20);
+        }
     }
+
+    @Configuration
+    public static class OtherConfig {
+        @Bean("user1")
+        public User user() {
+            return new User("rose", 21);
+        }
+    }
+
 
     @ConfigurationProperties(prefix = "app")
     public static class ConfigHolder {
@@ -62,12 +77,11 @@ public class TestAnnotationConfigApplicationContext {
         AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(AppConfig.class);
         ConfigHolder configHolder = ctx.getBean(ConfigHolder.class);
         //使用springboot的@EnableAutoConfiguration
+        //AnnotationConfigApplicationContext springBootCtx = new AnnotationConfigApplicationContext(TestAnnotationConfigApplicationContext.class);
 
-        //ctx.scan("com.matas");//org.springframework.context.annotation.ClassPathBeanDefinitionScanner.doScan()
-
-        AnnotationConfigApplicationContext springBootCtx = new AnnotationConfigApplicationContext(TestAnnotationConfigApplicationContext.class);
-
-        System.out.println(configHolder);
-        System.out.println(springBootCtx.getBeanDefinitionCount());
+        //测试同名配置
+        Arrays.stream(ctx.getBeanDefinitionNames()).filter(name -> name.startsWith("user")).map(ctx::getBean).forEach(System.err::println);
+        System.err.println(configHolder);
+        //System.out.println(springBootCtx.getBeanDefinitionCount());
     }
 }
