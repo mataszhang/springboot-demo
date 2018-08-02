@@ -4,13 +4,17 @@ import org.junit.Test;
 import org.springframework.core.BridgeMethodResolver;
 import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.GenericTypeResolver;
+import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.core.annotation.SynthesizingMethodParameter;
+import org.springframework.ui.ExtendedModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.support.HandlerMethodInvoker;
 import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.method.support.InvocableHandlerMethod;
+import org.springframework.web.method.support.ModelAndViewContainer;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
@@ -50,7 +54,8 @@ public class TestAnnotationMethodParamParse implements IHello<String, Integer> {
             String methodName = method.getName();
 
             String parameterType = methodParam.getParameterType().getName();
-            String parameterName = methodParam.getParameterName();
+            String parameterName = methodParam.getParameterName(); //通过ParameterNameDiscoverer来解析参数名称。
+            //具体由LocalVariableTableParameterNameDiscoverer  Uses ObjectWeb's ASM library for analyzing class files获得
 
             Type genericParameterType = methodParam.getGenericParameterType();
             System.out.println("第" + parameterIndex + "个参数泛型类型=>" + genericParameterType.getTypeName());
@@ -72,8 +77,10 @@ public class TestAnnotationMethodParamParse implements IHello<String, Integer> {
      * @return java.util.List<org.springframework.core.annotation.SynthesizingMethodParameter>
      * @author matas
      * @date 2018/7/27 19:32
-     * @see InvocableHandlerMethod#getMethodArgumentValues(org.springframework.web.context.request.NativeWebRequest, org.springframework.web.method.support.ModelAndViewContainer, java.lang.Object...)
-     * @see HandlerMethodInvoker#resolveHandlerArguments(java.lang.reflect.Method, java.lang.Object, NativeWebRequest, org.springframework.ui.ExtendedModelMap)
+     * @see  HandlerMethod#initMethodParameters()  初始化  HandlerMethodParameter
+     * @see InvocableHandlerMethod#getMethodArgumentValues(NativeWebRequest, ModelAndViewContainer, java.lang.Object...)
+     * @see HandlerMethodInvoker#resolveHandlerArguments(java.lang.reflect.Method, java.lang.Object, NativeWebRequest, ExtendedModelMap)
+     * @see LocalVariableTableParameterNameDiscoverer#getParameterNames(java.lang.reflect.Method)  通过ASM来解析参数名  Uses ObjectWeb's ASM library for analyzing class files
      */
     public static List<SynthesizingMethodParameter> parse(Method method) {
         List<SynthesizingMethodParameter> parameterList = new ArrayList<>();
