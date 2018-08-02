@@ -4,14 +4,20 @@ import com.matas.conf.MyImportSelector;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.boot.logging.LogLevel;
+import org.springframework.boot.logging.LoggerConfiguration;
+import org.springframework.boot.logging.LoggingSystem;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.io.support.SpringFactoriesLoader;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
 @Import(MyImportSelector.class)
 @SpringBootApplication
-public class SpringbootDemoApplication {
+public class SpringbootDemoApplication implements ApplicationListener<ApplicationReadyEvent> {
 
     /**
      * 测试SpringFactoriesLoader
@@ -34,5 +40,20 @@ public class SpringbootDemoApplication {
         //SpringApplication.run(SpringbootDemoApplication.class, args);
         SpringApplication sa = new SpringApplication(SpringbootDemoApplication.class);
         sa.run(args);
+    }
+
+    /**
+     * 启动后，修改日志级别
+     *
+     * @param event
+     * @return void
+     * @author matas
+     * @date 2018/8/2 21:46
+     */
+    @Override
+    public void onApplicationEvent(ApplicationReadyEvent event) {
+        LoggingSystem loggingSystem = LoggingSystem.get(this.getClass().getClassLoader());
+        List<LoggerConfiguration> loggerConfigurations = loggingSystem.getLoggerConfigurations();
+        loggerConfigurations.stream().filter(config -> StringUtils.startsWithIgnoreCase(config.getName(), "org.springframework.web.servlet")).forEach(config -> loggingSystem.setLogLevel(config.getName(), LogLevel.DEBUG));
     }
 }
