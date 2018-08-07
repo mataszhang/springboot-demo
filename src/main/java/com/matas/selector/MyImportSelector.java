@@ -1,4 +1,4 @@
-package com.matas.conf;
+package com.matas.selector;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
@@ -19,13 +19,13 @@ public class MyImportSelector implements ImportSelector, BeanFactoryAware {
     @Override
     public String[] selectImports(AnnotationMetadata importingClassMetadata) {
         String myConfigName = MyImportSelectorConfig.class.getName();
-        System.err.println("com.matas.conf.MyImportSelector.selectImports()=>返回 "+myConfigName);
+        System.err.println("com.matas.selector.MyImportSelector.selectImports()=>返回 "+myConfigName);
         return new String[]{myConfigName};
     }
 
     @Override
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        System.err.println("com.matas.conf.MyImportSelector.setBeanFactory()");
+        System.err.println("com.matas.selector.MyImportSelector.setBeanFactory()");
         this.beanFactory = beanFactory;
     }
 }

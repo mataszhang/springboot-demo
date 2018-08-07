@@ -1,4 +1,4 @@
-package com.matas.conf;
+package com.matas.selector;
 
 import com.matas.springbootdemo.bean.User;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
