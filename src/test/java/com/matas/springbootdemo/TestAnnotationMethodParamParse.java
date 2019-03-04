@@ -1,12 +1,10 @@
 package com.matas.springbootdemo;
 
 import org.junit.Test;
-import org.springframework.core.BridgeMethodResolver;
-import org.springframework.core.DefaultParameterNameDiscoverer;
-import org.springframework.core.GenericTypeResolver;
-import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
+import org.springframework.core.*;
 import org.springframework.core.annotation.SynthesizingMethodParameter;
 import org.springframework.ui.ExtendedModelMap;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,9 +26,9 @@ import java.util.List;
  * @date 2018/7/27 17:49
  * @email mataszhang@163.com
  */
-public class TestAnnotationMethodParamParse implements IHello<String, Integer> {
+public class TestAnnotationMethodParamParse implements IHello<List<String>, Integer> {
     @RequestMapping
-    public void hello(@RequestParam String name, @CookieValue Integer age) {
+    public void hello(@RequestParam List<String> name, @CookieValue Integer age) {
 
     }
 
@@ -41,6 +39,8 @@ public class TestAnnotationMethodParamParse implements IHello<String, Integer> {
      * @return
      * @author matas
      * @date 2018/7/27 18:00
+     * @see https://jinnianshilongnian.iteye.com/blog/1993608
+     * @see https://blog.csdn.net/u011402896/article/details/80702047
      */
     @Test
     public void test() throws Exception {
@@ -59,7 +59,6 @@ public class TestAnnotationMethodParamParse implements IHello<String, Integer> {
 
             Type genericParameterType = methodParam.getGenericParameterType();
             System.out.println("第" + parameterIndex + "个参数泛型类型=>" + genericParameterType.getTypeName());
-
             if (methodParam.hasMethodAnnotation(RequestMapping.class) && methodParam.hasParameterAnnotation(RequestParam.class)) {
                 System.out.println(methodName + "的第" + parameterIndex + "个参数" + parameterName + "类型为" + parameterType + "，上面有" + RequestParam.class + "注解");
             }
@@ -71,13 +70,30 @@ public class TestAnnotationMethodParamParse implements IHello<String, Integer> {
     }
 
     /**
+     * 通过 org.springframework.core.ResolvableType来解析泛型
+     */
+    @Test
+    public void testResolvableType() {
+        ResolvableType resolvableType = ResolvableType.forClass(TestAnnotationMethodParamParse.class);
+        ResolvableType anInterface = resolvableType.getInterfaces()[0];
+        System.err.println(anInterface.resolveGeneric(0));
+        System.err.println(anInterface.resolveGeneric(0, 0));
+        System.err.println(anInterface.resolveGeneric(1));
+
+        ResolvableType methodParameter = ResolvableType.forMethodParameter(ReflectionUtils.findMethod(TestAnnotationMethodParamParse.class, "hello", List.class, Integer.class), 0);
+        System.err.println(methodParameter.hasGenerics());
+        System.err.println(methodParameter.resolveGeneric(0));
+    }
+
+
+    /**
      * 解析方法参数的参数名，参数泛型，参数注解
      *
      * @param method
      * @return java.util.List<org.springframework.core.annotation.SynthesizingMethodParameter>
      * @author matas
      * @date 2018/7/27 19:32
-     * @see  HandlerMethod#initMethodParameters()  初始化  HandlerMethodParameter
+     * @see HandlerMethod#initMethodParameters()  初始化  HandlerMethodParameter
      * @see InvocableHandlerMethod#getMethodArgumentValues(NativeWebRequest, ModelAndViewContainer, java.lang.Object...)
      * @see HandlerMethodInvoker#resolveHandlerArguments(java.lang.reflect.Method, java.lang.Object, NativeWebRequest, ExtendedModelMap)
      * @see LocalVariableTableParameterNameDiscoverer#getParameterNames(java.lang.reflect.Method)  通过ASM来解析参数名  Uses ObjectWeb's ASM library for analyzing class files
@@ -101,6 +117,7 @@ public class TestAnnotationMethodParamParse implements IHello<String, Integer> {
     }
 
 }
+
 
 interface IHello<T, E> {
     void hello(T name, E age);
